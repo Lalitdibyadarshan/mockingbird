@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.option {
+  height: fit-content;
+  width: fit-content;
+  background-color: orange;
+  color: white;
+  padding: 0.2rem;
+  border: none;
+  border-radius: 2rem;
+}

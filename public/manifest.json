@@ -3,7 +3,6 @@
   "name": "Mocking Bird",
   "version": "1.0",
   "description": "Mocking made easy",
-  "default_local": "en",
   "icons": {
     "128": "logo128.png",
     "48": "logo48.png",
@@ -15,15 +14,46 @@
       "48": "logo48.png",
       "16": "logo16.png"
     },
-    "default_popup": "index.html"
-
+    "default_popup": "popup.html"
   },
-  "permissions": ["storage"],
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost:*/*",
+    "https://localhost:*/*",
+    "https://www.google.com/*"
+  ],
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "matches": [
+        "http://localhost:*/*",
+        "https://localhost:*/*",
+        "https://www.google.com/*"
+
+      ],
+      "js": ["static/js/content.js"],
+      "css": ["static/css/content.css"]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   },
-  "options_page": "templates/options.html"
-
+  "options_page": "options.html",
+  "web_accessible_resources": [
+    {
+      "resources": [ "/static/js/inject.js" ],
+      "matches": [
+        "https://www.google.com/*",
+        "http://localhost:*/*",
+        "https://localhost:*/*"
+      ]
+    }
+  ]
 }
 
 

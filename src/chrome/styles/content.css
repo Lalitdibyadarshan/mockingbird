@@ -1,0 +1,19 @@
+body[mb-intercept='true'] {
+    -webkit-transform: translateY(1.5rem);
+}
+.interceptor {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 0.1rem;
+    padding: 0.7rem;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6ec7e8;
+    color: #000;
+    font-weight: 600;
+    position: fixed;
+    border: 2px #101010 dashed;
+}
