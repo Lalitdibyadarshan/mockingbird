@@ -1,3 +1,5 @@
 export enum MessageActions {
-    POWER = 'power'
+    RELOAD = 'reload',
+    RUNTIME_URL = 'runtime-url',
+    FETCH_DATA = 'fetch-data'
 }

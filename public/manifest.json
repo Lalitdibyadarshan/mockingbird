@@ -46,14 +46,23 @@
   "options_page": "options.html",
   "web_accessible_resources": [
     {
-      "resources": [ "/static/js/inject.js" ],
+      "resources": [ 
+        "/static/js/inject.js",
+        "/static/data/*"
+      ],
       "matches": [
         "https://www.google.com/*",
         "http://localhost:*/*",
         "https://localhost:*/*"
       ]
     }
-  ]
+  ],
+  "externally_connectable": {
+    "matches": [
+      "http://localhost:*/*",
+      "https://*.google.com/*"
+    ]
+  }
 }
 
 

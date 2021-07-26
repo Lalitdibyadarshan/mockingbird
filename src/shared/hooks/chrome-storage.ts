@@ -1,24 +1,16 @@
 import { useEffect, useState } from "react";
+import { StorageKey } from "../enums/storage-key.enum";
+import { ChromeUtils } from "../utils/chrome-utils";
 
-export const useChromeStorage = (key: string, initialValue: any) => {
-    let value: any = null;
-    let [entity, setEntity] = useState(null);
-    // const [dataLoaded, setDataLoaded] = useState(false);
-
-    chrome.storage.sync.get(key, res => {
-        value = res[key];
-        // setDataLoaded(true);
+export const useChromeStorage = (key: StorageKey, initialValue: any) => {
+    let [entity, setEntity] = useState(async () => {
+        const val =  await ChromeUtils.getChromeStorage(key);
+        return val ? val : initialValue;
     });
 
     useEffect(() => {
-        setEntity(value || initialValue);
-    }, [value]);
-
-    useEffect(() => {
-        if (value !== entity) {
-            chrome.storage.sync.set({[key]: entity});
-        }
-    }, [entity]);
+        ChromeUtils.setChromeStorage(key, entity);
+    }, [entity, key, initialValue]);
 
     return [entity, setEntity] as any[];
 }
