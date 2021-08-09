@@ -21,6 +21,8 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "popup.config.js"  ]
+    "src",
+    "popup.config.js"
+  ],
+  "extends": "./tsconfig.paths.json"
 }

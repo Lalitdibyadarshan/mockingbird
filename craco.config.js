@@ -19,6 +19,13 @@ module.exports = {
                 optimization: {
                     ...webpackConfig.optimization,
                     runtimeChunk: false,
+                },
+                resolve: {
+                    ...webpackConfig.resolve,
+                    alias: {
+                        ...webpackConfig.resolve.alias,
+                        "@shared": path.resolve(__dirname, "./src/shared/"),
+                    }
                 }
             }
         }
