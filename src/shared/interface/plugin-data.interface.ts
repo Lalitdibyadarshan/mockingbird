@@ -9,13 +9,12 @@ export interface PluginDataInterface {
     allQuery: boolean,
     type: HttpType
     mock: boolean, // enabled when status not 200
-
+    selectedMock?: string,
     mockData: MockDataInterface[], // enabled when mock true // contains actual json variants
     header: Object // disabled when mock true
 }
 
 export interface MockDataInterface {
-    index: number,
     alias: string,
     data: Object
 }
