@@ -6,7 +6,7 @@ export interface PluginDataInterface {
     status: number,
     delay: number,
     allPath: boolean,
-    allQuery: boolean,
+    ignoreQuery: boolean,
     type: HttpType
     mock: boolean, // enabled when status not 200
     selectedMock?: string,

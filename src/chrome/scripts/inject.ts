@@ -2,7 +2,7 @@ import { MessageActions } from "../../shared/enums/MessageActions";
 import { PluginDataInterface } from "../../shared/interface/plugin-data.interface";
 import { ChromeUtils } from "../../shared/utils/chrome-utils";
 
-export class Inject {
+export default class Inject {
     pluginData: PluginDataInterface[];
 
     init() {
@@ -39,7 +39,9 @@ export class Inject {
                         self.pluginData = res;
                         const mockData = self.verifyRequest(this);
                         mockData ? self.interceptXHR(this, mockData) : originalSend.apply(this, args ? [args] : []);                     
-                    }) 
+                    }, err => {
+                        console.warn(`[mb:inject_script] ${err}`)
+                    })
                 } else {
                     const mockData = self.verifyRequest(this);
                     mockData ? self.interceptXHR(this, mockData) : originalSend.apply(this, args ? [args] : []);
@@ -50,16 +52,20 @@ export class Inject {
     }
 
     private verifyRequest(requestObj: XMLHttpRequest): PluginDataInterface {
+        const {origin, pathname, search} = new URL(requestObj['requestUrl']);
         return this.pluginData
             .find(data => {
                 if (!data.isEnabled) return false;
-                const regexURL = new RegExp(data.url
+                const modifiedURL = data.ignoreQuery ? data.url.split('\\?')[0] : data.url;
+
+                const regexURL = new RegExp('^' + modifiedURL
                     // eslint-disable-next-line no-useless-escape
                     .replace(/[|\\{}()[\]^$+*?.\/\:]/g, '\\$&')
                     .replace(/-/g, '\\x2d')
-                    .replace('DYNAMIC', '[A-Za-z0-9]'));
-
-                return regexURL.test(requestObj['requestUrl']) && data.type === requestObj['requestType']
+                    .replace('DYNAMIC', '[A-Za-z0-9]') + '$');
+                return data.ignoreQuery ? 
+                    regexURL.test(origin + pathname) && data.type === requestObj['requestType'] :
+                    regexURL.test(origin + pathname + search) && data.type === requestObj['requestType'];
             });
     }
     

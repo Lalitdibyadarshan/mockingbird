@@ -12,9 +12,9 @@ export class Content {
 
     private checkExtensionState(): void {
         ChromeUtils.getChromeStorage(StorageKey.EXTENSION_STATE)
-            .then((result) => {
-                this.isExtensionEnabled = result;
-                if (this.isExtensionEnabled) {
+        .then((result) => {
+            this.isExtensionEnabled = result;
+            if (this.isExtensionEnabled) {
                     this.injectScript();
                     window.addEventListener('DOMContentLoaded', this.showExtensionBanner.bind(this));
                 }
@@ -37,10 +37,9 @@ export class Content {
     private injectScript(): void {
         const script = document.createElement('script');
         script.src = ChromeUtils.getRuntimeUrl("static/js/inject.js");
-        script.defer = true;
         script.id = 'mbScript';
         script.setAttribute('md-id', chrome.runtime.id);
-        document.getElementsByTagName('html')[0].appendChild(script);
+        document.getElementsByTagName('html')[0].insertBefore(script, document.getElementsByTagName('html')[0].firstChild);
     }
 }
 const content = new Content();

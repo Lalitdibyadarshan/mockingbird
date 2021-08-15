@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import Badge from 'react-bootstrap/Badge';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -7,8 +7,56 @@ import Accordion from 'react-bootstrap/Accordion';
 import Show from '@shared/components/show-when';
 import { PluginDataInterface } from '@shared/interface/plugin-data.interface';
 import Form from 'react-bootstrap/Form';
+import { usePlugin } from '@shared/contexts/plugin-data.context';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInterface }) {
+const CONFIGURABLE_PROPS = ['type', 'delay', 'status', 'selectedMock'];
+
+function Endpoint({ index, endpointData }: { index: number, endpointData: PluginDataInterface }) {
+    const {modifyEndpointData, extensionState, isChangesSavedToStorage, setIsChangesSavedToStorage} = usePlugin();
+
+    const [isUnsaved, setUnsaved] = useState(false);
+    let form = {
+        isEnabledRef: useRef(),
+        typeRef: useRef(),
+        delayRef: useRef(),
+        statusRef: useRef(),
+        selectedMockRef: useRef(),
+        ignoreQueryRef: useRef()
+    }
+
+    const toggleCheckbox = (e, property) => {
+        e && e.stopPropagation();
+        try {
+            endpointData[property] = e.target.value = !JSON.parse(e.target.value);
+        }
+        catch {
+            endpointData[property] = e.target.value = !endpointData[property];
+        }
+        setUnsaved(true);
+        setIsChangesSavedToStorage(false);
+        modifyEndpointData(endpointData, index);
+    }
+
+    const updateEndPointData = (e) => {
+        e && e.stopPropagation();
+        detectChanges();
+        for(let prop of CONFIGURABLE_PROPS) {
+            endpointData[prop] = form[prop + 'Ref'].current.value;
+        }
+        modifyEndpointData(endpointData, index);
+    }
+
+    const detectChanges = () => {
+        for(let prop of CONFIGURABLE_PROPS) {
+            if (endpointData[prop] === form[prop + 'Ref'].current.value) {
+                setUnsaved(true);
+                setIsChangesSavedToStorage(false);
+                return;
+            }
+        }
+    }
+
     return (
         <Accordion>
             <Accordion.Item eventKey={index.toString()}>
@@ -17,32 +65,35 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                         <Row className="align-items-center">
                             <Col md={1}>
                                 <div className="form-check form-switch">
-                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={endpoint.isEnabled} />
+                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={endpointData.isEnabled} onClick={(e) => toggleCheckbox(e, 'isEnabled')} disabled={!extensionState}/>
                                 </div>
                             </Col>
                             <Col md={11}>
                                 <Row className="mb-3">
                                     <Col>
                                         <span className="fw-bold" style={{color: '#d2691e'}}>
-                                            {endpoint.url}
+                                            {endpointData.url}
                                         </span>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <Show when={endpoint.isEnabled}>
-                                            <Show when={endpoint.type}>
-                                                <Badge pill bg="secondary" className="mx-1">{endpoint.type}</Badge>
+                                        <Show when={endpointData.isEnabled}>
+                                            <Show when={endpointData.type}>
+                                                <Badge pill bg="secondary" className="mx-1">{endpointData.type}</Badge>
                                             </Show>
-                                            <Show when={endpoint.delay}>
-                                                <Badge pill bg="secondary" className="mx-1">{'delay: ' + endpoint.delay + 'ms'}</Badge>
+                                            <Show when={endpointData.delay}>
+                                                <Badge pill bg="secondary" className="mx-1">{'delay: ' + endpointData.delay + 'ms'}</Badge>
                                             </Show>
-                                            <Show when={endpoint.status && ['4', '5'].includes(endpoint.status.toString()[0])}>
-                                                <Badge pill bg="danger" className="mx-1">{endpoint.status}</Badge>
+                                            <Show when={endpointData.status && ['4', '5'].includes(endpointData.status.toString()[0])}>
+                                                <Badge pill bg="danger" className="mx-1">{endpointData.status}</Badge>
                                             </Show>
-                                            <Show when={endpoint.status && ['2'].includes(endpoint.status.toString()[0])}>
-                                                <Badge pill bg="success" className="mx-1">{endpoint.status}</Badge>
+                                            <Show when={endpointData.status && ['2'].includes(endpointData.status.toString()[0])}>
+                                                <Badge pill bg="success" className="mx-1">{endpointData.status}</Badge>
                                             </Show>
+                                        </Show>
+                                        <Show when={isUnsaved && !isChangesSavedToStorage}>
+                                            <Badge pill bg="warning" className="mx-1">{'Unsaved'}</Badge>
                                         </Show>
                                     </Col>
                                 </Row>
@@ -52,10 +103,11 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                 </Accordion.Header>
                 <Accordion.Body>
                     <Container>
+                        
                         <Row className="mb-3">
                             <Col md={2}>
                                 <Form.Label>Request Type</Form.Label>
-                                <Form.Select aria-label="Request Type" defaultValue={endpoint.type}>
+                                <Form.Select aria-label="Request Type" defaultValue={endpointData.type} ref={form.typeRef} onChange={updateEndPointData} disabled={!extensionState}>
                                     {
                                         ['GET', 'POST', 'PUT', 'DELETE', 'OPTION'].map(type => {
                                             return (
@@ -67,11 +119,11 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                             </Col>
                             <Col md={2}>
                                 <Form.Label>Delay</Form.Label>
-                                <Form.Control type="text" placeholder="Delay" defaultValue={endpoint.delay} />
+                                <Form.Control type="text" placeholder="Delay" defaultValue={endpointData.delay} ref={form.delayRef} onChange={updateEndPointData} disabled={!extensionState}/>
                             </Col>
                             <Col md={2}>
                                 <Form.Label>Status</Form.Label>
-                                <Form.Select aria-label="Response Status" defaultValue={endpoint.status}>
+                                <Form.Select aria-label="Response Status" defaultValue={endpointData.status} ref={form.statusRef} onChange={updateEndPointData} disabled={!extensionState}>
                                     {
                                         [200, 400, 404, 401, 403, 500].map(status => {
                                             return (
@@ -83,9 +135,9 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                             </Col>
                             <Col md={6}>
                                 <Form.Label>Select Mock</Form.Label>
-                                <Form.Select aria-label="Select Mock" defaultValue={endpoint.selectedMock}>
+                                <Form.Select aria-label="Select Mock" defaultValue={endpointData.selectedMock} ref={form.selectedMockRef} onChange={updateEndPointData} disabled={!extensionState}>
                                     {
-                                        endpoint.mockData.map(mock => {
+                                        endpointData.mockData.map(mock => {
                                             return (
                                                 <option value={mock.alias}>{mock.alias}</option>
                                             );
@@ -97,7 +149,7 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                         <Row>
                             <Col md={6}>
                                 <Form.Label>Request Header</Form.Label>
-                                <Form.Select defaultValue="2">
+                                <Form.Select defaultValue="2" disabled={!extensionState}>
                                     <option></option>
                                     <option value="1">200</option>
                                     <option value="2">400</option>
@@ -109,7 +161,7 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                             </Col>
                             <Col md={6}>
                                 <Form.Label>Response Header</Form.Label>
-                                <Form.Select defaultValue="1">
+                                <Form.Select defaultValue="1" disabled={!extensionState}>
                                     <option></option>
                                     <option value="1">200</option>
                                     <option value="2">400</option>
@@ -118,6 +170,32 @@ function Endpoint({ index, endpoint }: { index: number, endpoint: PluginDataInte
                                     <option value="5">403</option>
                                     <option value="6">500</option>
                                 </Form.Select>
+                            </Col>
+                        </Row>
+                        <Row className="my-2">
+                            <Col>
+                                <Form.Check 
+                                    type='checkbox'
+                                    id={`ignore-query`}
+                                    label={`Ignore query params `}
+                                    checked={endpointData.ignoreQuery}
+                                    ref={form.ignoreQueryRef}
+                                    onClick={(e) => toggleCheckbox(e, 'ignoreQuery')}
+                                    className="me-2"
+                                    style={{width: 'max-content', display: 'inline-block'}}
+                                />
+                                <OverlayTrigger
+                                    placement={'top'}
+                                    overlay={
+                                        <Tooltip id={`tooltip-ignore-query`}>
+                                            {'Query params will be ignored while matching the mock URLs'}
+                                        </Tooltip>
+                                    }
+                                >
+                                    <Badge pill bg="primary">
+                                        i
+                                    </Badge>
+                                </OverlayTrigger>
                             </Col>
                         </Row>
                     </Container>

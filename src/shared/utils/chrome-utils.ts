@@ -25,9 +25,15 @@ export class ChromeUtils {
     }
 
     static sendRuntimeMessage(message: MessageInterface, isInjectedScript = false): Promise<any> {
+
+
         return new Promise((resolve, reject) => {
+            const chromeId  = document.getElementById('mbScript') && document.getElementById('mbScript').getAttribute('md-id');
+            if (isInjectedScript && !chromeId) {
+                reject('Chrome id not available');
+            };
             const args = [
-                isInjectedScript && document.getElementById('mbScript').getAttribute('md-id'),
+                chromeId,
                 message,
                 resolve
             ].filter(Boolean);
@@ -38,5 +44,9 @@ export class ChromeUtils {
 
     static getRuntimeUrl(path:string) {
         return chrome.runtime.getURL(path);
+    }
+
+    static openOptionsPage() {
+        chrome.runtime.openOptionsPage()
     }
 }
