@@ -103,7 +103,6 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                 </Accordion.Header>
                 <Accordion.Body>
                     <Container>
-                        
                         <Row className="mb-3">
                             <Col md={2}>
                                 <Form.Label>Request Type</Form.Label>

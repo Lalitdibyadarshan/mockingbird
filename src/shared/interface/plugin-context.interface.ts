@@ -9,4 +9,5 @@ export interface PluginContextInterface {
     setExtensionState: any,
     modifyEndpointData: (updatedData: PluginDataInterface, index: number) => void,
     saveDataToChromeStorage: () => void;
+    resetChanges: () => void;
 }

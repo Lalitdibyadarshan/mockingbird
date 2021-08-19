@@ -1,5 +1,4 @@
 import React from 'react'
-import { HttpType } from '@shared/enums/http-type.enum'
 import Endpoint from './endpoint/endpoint'
 import { usePlugin } from '@shared/contexts/plugin-data.context';
 import { Alert, Button } from 'react-bootstrap';
@@ -8,7 +7,6 @@ import { ChromeUtils } from '@shared/utils/chrome-utils';
 
 function Body() {
     const {pluginData} = usePlugin();
-    
     const renderBody = () => {
         return (pluginData) ?
                 (<div>

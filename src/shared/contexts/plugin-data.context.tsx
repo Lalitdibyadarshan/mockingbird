@@ -3,10 +3,11 @@ import { useChromeStorage } from '@shared/hooks/chrome-storage';
 import { PluginContextInterface } from '@shared/interface/plugin-context.interface';
 import { PluginDataInterface } from '@shared/interface/plugin-data.interface';
 import { ChromeUtils } from '@shared/utils/chrome-utils';
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useState } from 'react';
 
 const pluginContext =  React.createContext<PluginContextInterface>({} as PluginContextInterface);
+let pluginDataBackup: PluginDataInterface[];
 
 export function usePlugin() {
     return useContext(pluginContext);
@@ -26,6 +27,12 @@ function PluginDataProvider({children}) {
     const saveDataToChromeStorage = () => {
         ChromeUtils.setChromeStorage(StorageKey.EXTENSION_DATA, pluginData);
         setIsChangesSavedToStorage(true);
+        pluginDataBackup = JSON.parse(JSON.stringify(pluginData));
+    }
+
+    const resetChanges = () => {
+        setPluginData(JSON.parse(JSON.stringify(pluginDataBackup)));
+        setIsChangesSavedToStorage(true);
     }
 
     const value = {
@@ -36,8 +43,17 @@ function PluginDataProvider({children}) {
         saveDataToChromeStorage: saveDataToChromeStorage,
         setExtensionState: setExtensionState,
         isChangesSavedToStorage: isChangesSavedToStorage,
-        setIsChangesSavedToStorage: setIsChangesSavedToStorage
+        setIsChangesSavedToStorage: setIsChangesSavedToStorage,
+        resetChanges: resetChanges
     } as PluginContextInterface;
+
+    useEffect(() => {
+      ChromeUtils.getChromeStorage(StorageKey.EXTENSION_DATA)
+        .then((data) => {
+            setPluginData(data);
+            pluginDataBackup = JSON.parse(JSON.stringify(data));
+        })
+    }, []);
 
     return (<pluginContext.Provider value={value}>
         {children}
