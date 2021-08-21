@@ -1,0 +1,35 @@
+.endpoint-editor {
+	border-radius: 11px !important;
+	background-color: rgb(210, 226, 238);
+	box-shadow: 6px 6px 12px #9ebed7, -6px -6px 12px #d6ffff;
+	height: 100%;
+
+	&__mock {
+		overflow: hidden;
+		box-shadow: inset 5px 5px 12px #c3d2dd, inset -5px -5px 12px #e1f2ff;
+		border-radius: 20px;
+		border: solid 1px #96d4ec;
+	}
+
+	&__mock-header {
+		height: 3rem;
+		top: -1rem;
+		position: relative;
+		box-shadow: 5px 5px 12px #c3d2dd, -5px -5px 12px #e1f2ff;
+		background: #d2e2ee;
+	}
+
+    &__mock-body {
+        height: 14rem;
+        overflow: auto;    
+    }
+
+    &__add-mock {
+        width: max-content !important;
+        font-size: xx-large;
+        cursor: pointer;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+}

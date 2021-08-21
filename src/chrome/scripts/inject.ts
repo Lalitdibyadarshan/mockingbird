@@ -98,7 +98,7 @@ export default class Inject {
                 return () => {
                     setTimeout(() => {
                         onreadystatechange();
-                    }, delay);
+                    }, delay && Number(delay));
                 }
             })(proxyXhr.onreadystatechange);
         }

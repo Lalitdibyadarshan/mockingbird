@@ -15,13 +15,13 @@ function App() {
         <>  
             <Show when={Array.isArray(pluginData) && pluginData.length > 0}>
                 <div style={{height: '100vh'}}>
-                    <Row style={{height: '100%'}}>
-                        <Col md={4} className={'p-0 ' + style['endpoint-list']}>
+                    <Row className={style['main-container']}>
+                        <Col md={4} className={'p-0 '}>
                             <EndpointList pluginData={pluginData} setSelectedEndpoint={setSelectedEndpoint}></EndpointList>
                         </Col>
-                        <Show when={selectedEndpoint.data && selectedEndpoint.index !== undefined}>
+                        <Show when={selectedEndpoint.data}>
                             <Col md={8} className="p-0">
-                                <EndPointEditor endpointData={selectedEndpoint.data} index={selectedEndpoint.index}></EndPointEditor>
+                                <EndPointEditor endpointData={selectedEndpoint.data}></EndPointEditor>
                             </Col>
                         </Show>
                     </Row>

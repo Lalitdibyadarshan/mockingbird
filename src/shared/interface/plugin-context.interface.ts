@@ -7,7 +7,9 @@ export interface PluginContextInterface {
     setPluginData: React.Dispatch<React.SetStateAction<PluginDataInterface[]>>,
     setIsChangesSavedToStorage: React.Dispatch<React.SetStateAction<boolean>>,
     setExtensionState: any,
-    modifyEndpointData: (updatedData: PluginDataInterface, index: number) => void,
+    modifyEndpointConfig: (updatedEndpointConfig: PluginDataInterface) => void,
     saveDataToChromeStorage: () => void;
     resetChanges: () => void;
+    addNewEndpointConfig: () => void;
+    removeEndpointConfig: (endpointConfig: PluginDataInterface) => void;
 }

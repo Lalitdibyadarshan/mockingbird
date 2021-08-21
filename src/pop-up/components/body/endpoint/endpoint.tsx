@@ -13,7 +13,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 const CONFIGURABLE_PROPS = ['type', 'delay', 'status', 'selectedMock'];
 
 function Endpoint({ index, endpointData }: { index: number, endpointData: PluginDataInterface }) {
-    const {modifyEndpointData, extensionState, isChangesSavedToStorage, setIsChangesSavedToStorage} = usePlugin();
+    const {modifyEndpointConfig, extensionState, isChangesSavedToStorage, setIsChangesSavedToStorage} = usePlugin();
 
     const [isUnsaved, setUnsaved] = useState(false);
     let form = {
@@ -35,7 +35,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
         }
         setUnsaved(true);
         setIsChangesSavedToStorage(false);
-        modifyEndpointData(endpointData, index);
+        modifyEndpointConfig(endpointData);
     }
 
     const updateEndPointData = (e) => {
@@ -44,7 +44,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
         for(let prop of CONFIGURABLE_PROPS) {
             endpointData[prop] = form[prop + 'Ref'].current.value;
         }
-        modifyEndpointData(endpointData, index);
+        modifyEndpointConfig(endpointData);
     }
 
     const detectChanges = () => {
@@ -78,19 +78,17 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <Show when={endpointData.isEnabled}>
-                                            <Show when={endpointData.type}>
-                                                <Badge pill bg="secondary" className="mx-1">{endpointData.type}</Badge>
-                                            </Show>
-                                            <Show when={endpointData.delay}>
-                                                <Badge pill bg="secondary" className="mx-1">{'delay: ' + endpointData.delay + 'ms'}</Badge>
-                                            </Show>
-                                            <Show when={endpointData.status && ['4', '5'].includes(endpointData.status.toString()[0])}>
-                                                <Badge pill bg="danger" className="mx-1">{endpointData.status}</Badge>
-                                            </Show>
-                                            <Show when={endpointData.status && ['2'].includes(endpointData.status.toString()[0])}>
-                                                <Badge pill bg="success" className="mx-1">{endpointData.status}</Badge>
-                                            </Show>
+                                        <Show when={endpointData.type}>
+                                            <Badge pill bg="secondary" className="mx-1">{endpointData.type}</Badge>
+                                        </Show>
+                                        <Show when={endpointData.delay !== undefined}>
+                                            <Badge pill bg="secondary" className="mx-1">{'delay: ' + endpointData.delay + 'ms'}</Badge>
+                                        </Show>
+                                        <Show when={endpointData.status && ['4', '5'].includes(endpointData.status.toString()[0])}>
+                                            <Badge pill bg="danger" className="mx-1">{endpointData.status}</Badge>
+                                        </Show>
+                                        <Show when={endpointData.status && ['2'].includes(endpointData.status.toString()[0])}>
+                                            <Badge pill bg="success" className="mx-1">{endpointData.status}</Badge>
                                         </Show>
                                         <Show when={isUnsaved && !isChangesSavedToStorage}>
                                             <Badge pill bg="warning" className="mx-1">{'Unsaved'}</Badge>

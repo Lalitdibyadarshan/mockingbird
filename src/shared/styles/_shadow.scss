@@ -1,0 +1,13 @@
+$input-field-shadow: inset 2px 2px 6px #8b959d, inset -2px -2px 2px #ffffff;
+$button-shadow: 5px 5px 10px #8b959d, -5px -5px 10px #ffffff;
+$container-shadow: 6px 6px 12px #9ebed7, -6px -6px 12px #d6ffff;
+
+button {
+    box-shadow: $button-shadow;
+}
+
+input[type='text'],
+input[type='number'],
+select { 
+    box-shadow: $input-field-shadow;
+}
