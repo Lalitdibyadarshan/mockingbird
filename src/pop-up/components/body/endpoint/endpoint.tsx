@@ -9,6 +9,8 @@ import { PluginDataInterface } from '@shared/interface/plugin-data.interface';
 import Form from 'react-bootstrap/Form';
 import { usePlugin } from '@shared/contexts/plugin-data.context';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import GlobalDictionary from '@shared/i18n/global-dictionary';
+import PopUpDictionary from '../../../i18n/popup-dictionary';
 
 const CONFIGURABLE_PROPS = ['type', 'delay', 'status', 'selectedMock'];
 
@@ -91,7 +93,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                             <Badge pill bg="success" className="mx-1">{endpointData.status}</Badge>
                                         </Show>
                                         <Show when={isUnsaved && !isChangesSavedToStorage}>
-                                            <Badge pill bg="warning" className="mx-1">{'Unsaved'}</Badge>
+                                            <Badge pill bg="warning" className="mx-1">{PopUpDictionary.TEXT_UNSAVED}</Badge>
                                         </Show>
                                     </Col>
                                 </Row>
@@ -103,7 +105,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                     <Container>
                         <Row className="mb-3">
                             <Col md={2}>
-                                <Form.Label>Request Type</Form.Label>
+                                <Form.Label>{GlobalDictionary.LABEL_REQUEST_TYPE}</Form.Label>
                                 <Form.Select aria-label="Request Type" defaultValue={endpointData.type} ref={form.typeRef} onChange={updateEndPointData} disabled={!extensionState}>
                                     {
                                         ['GET', 'POST', 'PUT', 'DELETE', 'OPTION'].map(type => {
@@ -115,11 +117,11 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                 </Form.Select>
                             </Col>
                             <Col md={2}>
-                                <Form.Label>Delay</Form.Label>
+                                <Form.Label>{GlobalDictionary.LABEL_DELAY}</Form.Label>
                                 <Form.Control type="text" placeholder="Delay" defaultValue={endpointData.delay} ref={form.delayRef} onChange={updateEndPointData} disabled={!extensionState}/>
                             </Col>
                             <Col md={2}>
-                                <Form.Label>Status</Form.Label>
+                                <Form.Label>{GlobalDictionary.LABEL_STATUS}</Form.Label>
                                 <Form.Select aria-label="Response Status" defaultValue={endpointData.status} ref={form.statusRef} onChange={updateEndPointData} disabled={!extensionState}>
                                     {
                                         [200, 400, 404, 401, 403, 500].map(status => {
@@ -131,7 +133,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                 </Form.Select>
                             </Col>
                             <Col md={6}>
-                                <Form.Label>Select Mock</Form.Label>
+                                <Form.Label>{GlobalDictionary.LABEL_SELECT_MOCK}</Form.Label>
                                 <Form.Select aria-label="Select Mock" defaultValue={endpointData.selectedMock} ref={form.selectedMockRef} onChange={updateEndPointData} disabled={!extensionState}>
                                     {
                                         endpointData.mockData.map(mock => {
@@ -145,7 +147,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                         </Row>
                         <Row>
                             <Col md={6}>
-                                <Form.Label>Request Header</Form.Label>
+                                <Form.Label>{GlobalDictionary.LABEL_REQUEST_HEADER}</Form.Label>
                                 <Form.Select defaultValue="2" disabled={!extensionState}>
                                     <option></option>
                                     <option value="1">200</option>
@@ -157,7 +159,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                 </Form.Select>
                             </Col>
                             <Col md={6}>
-                                <Form.Label>Response Header</Form.Label>
+                                <Form.Label>{GlobalDictionary.LABEL_RESPONSE_HEADER}</Form.Label>
                                 <Form.Select defaultValue="1" disabled={!extensionState}>
                                     <option></option>
                                     <option value="1">200</option>
@@ -174,7 +176,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                 <Form.Check 
                                     type='checkbox'
                                     id={`ignore-query`}
-                                    label={`Ignore query params `}
+                                    label={GlobalDictionary.LABEL_IGNORE_QUERY_PARAM}
                                     checked={endpointData.ignoreQuery}
                                     ref={form.ignoreQueryRef}
                                     onClick={(e) => toggleCheckbox(e, 'ignoreQuery')}
@@ -185,7 +187,7 @@ function Endpoint({ index, endpointData }: { index: number, endpointData: Plugin
                                     placement={'top'}
                                     overlay={
                                         <Tooltip id={`tooltip-ignore-query`}>
-                                            {'Query params will be ignored while matching the mock URLs'}
+                                            {GlobalDictionary.TOOLTIP_QUERY_PARAMS}
                                         </Tooltip>
                                     }
                                 >

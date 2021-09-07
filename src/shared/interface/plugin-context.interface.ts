@@ -12,4 +12,5 @@ export interface PluginContextInterface {
     resetChanges: () => void;
     addNewEndpointConfig: () => void;
     removeEndpointConfig: (endpointConfig: PluginDataInterface) => void;
+    importExternalData: (endpointConfig: PluginDataInterface) => void;
 }

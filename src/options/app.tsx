@@ -13,8 +13,7 @@ function App() {
 
     return (
         <>  
-            <Show when={Array.isArray(pluginData) && pluginData.length > 0}>
-                <div style={{height: '100vh'}}>
+                <div>
                     <Row className={style['main-container']}>
                         <Col md={4} className={'p-0 '}>
                             <EndpointList pluginData={pluginData} setSelectedEndpoint={setSelectedEndpoint}></EndpointList>
@@ -26,7 +25,6 @@ function App() {
                         </Show>
                     </Row>
                 </div>
-            </Show>
         </>
     );
 }

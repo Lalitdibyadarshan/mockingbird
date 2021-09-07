@@ -53,7 +53,8 @@
       "matches": [
         "https://www.google.com/*",
         "http://localhost:*/*",
-        "https://localhost:*/*"
+        "https://localhost:*/*",
+        "<all_urls>"
       ]
     }
   ],

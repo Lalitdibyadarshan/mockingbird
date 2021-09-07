@@ -2,6 +2,7 @@ import Show from '@shared/components/show-when';
 import { MockDataInterface } from '@shared/interface/plugin-data.interface';
 import React, { useRef, useState } from 'react'
 import { Button, FormControl, InputGroup } from 'react-bootstrap'
+import OptionsDictionary from '../../i18n/options-dictionary';
 import EndpointJsonEditor from './endpoint-Json-editor/endpoint-json-editor';
 
 function EndpointMocks({ mockData, index, removeMockResponse, updateNewMockResponse }: { mockData: MockDataInterface, index: number, removeMockResponse: (index) => void, updateNewMockResponse: (index, data) => void }) {
@@ -22,7 +23,7 @@ function EndpointMocks({ mockData, index, removeMockResponse, updateNewMockRespo
         <div className="my-2 px-2 d-flex">
             <FormControl
                 type="text"
-                placeholder={'Mock alias name'}
+                placeholder={OptionsDictionary.PLACEHOLDER_MOCK_ALIAS_NAME}
                 aria-label={mockData.alias}
                 defaultValue={mockData.alias}
                 ref={aliasRef}

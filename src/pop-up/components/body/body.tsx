@@ -3,12 +3,13 @@ import Endpoint from './endpoint/endpoint'
 import { usePlugin } from '@shared/contexts/plugin-data.context';
 import { Alert, Button } from 'react-bootstrap';
 import { ChromeUtils } from '@shared/utils/chrome-utils';
+import PopUpDictionary from '../../i18n/popup-dictionary';
 
 
 function Body() {
     const {pluginData} = usePlugin();
     const renderBody = () => {
-        return (pluginData) ?
+        return (pluginData && pluginData.length) ?
                 (<div>
                     {pluginData.map((endpoint, index) => {
                         return (
@@ -17,9 +18,9 @@ function Body() {
                     })}
                 </div>) :
                 (<Alert  variant={'warning'}>
-                    No Configurations found. To configure mocks 
-                    <Button variant="link" onClick={() => ChromeUtils.openOptionsPage()}>click</Button>
-                    here
+                    {PopUpDictionary.ALERT_NO_CONFIG_FOUND}
+                    <Button variant="link" onClick={() => ChromeUtils.openOptionsPage()}>{PopUpDictionary.BTN_CLICK}</Button>
+                    {PopUpDictionary.TEXT_HERE}
                   </Alert>)
     }
 

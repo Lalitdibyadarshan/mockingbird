@@ -19,7 +19,6 @@ function PluginDataProvider({children}) {
     const [pluginData, setPluginData] = useState<PluginDataInterface[]>([]);
     const [extensionState, setExtensionState] = useChromeStorage(StorageKey.EXTENSION_STATE, false);
     const [isChangesSavedToStorage, setIsChangesSavedToStorage] = useState<boolean>(true);
-
     const modifyEndpointConfig = (updatedEndpointConfig: PluginDataInterface) => {
         const updatedPluginData = [...pluginData];
         const index = updatedPluginData.findIndex((val) => val.id === updatedEndpointConfig.id);
@@ -32,7 +31,7 @@ function PluginDataProvider({children}) {
         ChromeUtils.setChromeStorage(StorageKey.EXTENSION_DATA, pluginData);
         setIsChangesSavedToStorage(true);
         pluginDataBackup = JSON.parse(JSON.stringify(pluginData));
-    }
+    };
 
     const resetChanges = () => {
         setPluginData(JSON.parse(JSON.stringify(pluginDataBackup)));
@@ -53,6 +52,11 @@ function PluginDataProvider({children}) {
         setIsChangesSavedToStorage(false);
     }
 
+    const importExternalData = (jsonData) => {
+        const updatedPluginData = [...pluginData, ...jsonData];
+        setPluginData(updatedPluginData);
+    }
+
     const value = {
         pluginData: pluginData,
         extensionState: extensionState,
@@ -64,7 +68,8 @@ function PluginDataProvider({children}) {
         setIsChangesSavedToStorage: setIsChangesSavedToStorage,
         resetChanges: resetChanges,
         addNewEndpointConfig: addNewEndpointConfig,
-        removeEndpointConfig: removeEndpointConfig
+        removeEndpointConfig: removeEndpointConfig,
+        importExternalData: importExternalData
     } as PluginContextInterface;
 
     useEffect(() => {

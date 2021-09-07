@@ -2,6 +2,7 @@ import { usePlugin } from '@shared/contexts/plugin-data.context';
 import { MockDataInterface, PluginDataInterface } from '@shared/interface/plugin-data.interface';
 import React from 'react'
 import { Col, Container, FormLabel, Row } from 'react-bootstrap';
+import OptionsDictionary from '../i18n/options-dictionary';
 import EndPointConfig from './endpoint-config/endpoint-config';
 import style from './endpoint-editor.module.scss';
 import EndpointMocks from './endpoint-mocks/endpoint-mocks';
@@ -29,7 +30,7 @@ function EndPointEditor({endpointData}: {endpointData: PluginDataInterface}) {
     }
 
     return (
-        <Container className="py-4 h-100">
+        <Container className="py-4">
             <div className={style['endpoint-editor']}>
                 <Row>
                     <Col md="12" className="px-5">
@@ -40,7 +41,7 @@ function EndPointEditor({endpointData}: {endpointData: PluginDataInterface}) {
                     <Col md={6} className={"pt-3 " + style['endpoint-editor__mock']}>
                         <Row className={'align-items-center ' + style['endpoint-editor__mock-header']}>
                             <button className={'col-md-1 ' + style['endpoint-editor__add-mock']} onClick={ () => addNewMockResponse() }>+</button>
-                            <FormLabel className="pt-2 col-md-6">Mocks Configurations</FormLabel>
+                            <FormLabel className="pt-2 col-md-6">{OptionsDictionary.TEXT_MOCKS_CONFIGURATION}</FormLabel>
                         </Row>
                         <section className={style['endpoint-editor__mock-body']}>
                             {endpointData.mockData.map((data, index) => {
